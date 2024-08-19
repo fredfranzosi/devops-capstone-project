@@ -213,3 +213,38 @@ class TestAccountService(TestCase):
         )
         # assert that the resp.status_code is status.HTTP_404_NOT_FOUND
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+
+    def test_delete_account(self):
+        """It should Delete an existing Account"""
+         # create an Account to update        
+        account = self._create_accounts(1)[0]
+
+        # send a self.client.delete() request to the BASE_URL with an id of an account
+        response = self.client.delete(f"{BASE_URL}/{account.id}")
+        # assert that the resp.status_code is status.HTTP_204_NO_CONTENT
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+
+        # Make a GET request to the API endpoint to check if the account was deleted
+        response = self.client.get(f"{BASE_URL}/{account.id}")
+
+        # Assert that the return code was HTTP_404_NOT_FOUND
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+    
+    def test_delete_account_not_found(self):
+        """It should raise an error when deleting a non-existing existing Account"""
+        # send a self.client.delete() request to the BASE_URL with an invalid account number (e.g., 0)
+        response = self.client.delete(f"{BASE_URL}/0")
+        # assert that the resp.status_code is status.HTTP_404_NOT_FOUND
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+    
+    def test_method_not_allowed(self):
+        """It should not allow an illegal method call"""
+        # call self.client.delete() on the BASE_URL
+        response = self.client.delete(f"{BASE_URL}")
+        # assert that the resp.status_code is status.HTTP_405_METHOD_NOT_ALLOWED
+        self.assertEqual(response.status_code, status.HTTP_405_METHOD_NOT_ALLOWED)
+
+        # call self.client.put() on the BASE_URL
+        response = self.client.put(f"{BASE_URL}")
+        # assert that the resp.status_code is status.HTTP_405_METHOD_NOT_ALLOWED
+        self.assertEqual(response.status_code, status.HTTP_405_METHOD_NOT_ALLOWED)
