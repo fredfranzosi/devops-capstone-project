@@ -60,6 +60,8 @@ def create_accounts():
 ######################################################################
 # LIST ALL ACCOUNTS
 ######################################################################
+
+
 @app.route("/accounts", methods=["GET"])
 def list_accounts():
     """Returns a list of Accounts"""
@@ -76,6 +78,8 @@ def list_accounts():
 ######################################################################
 # READ AN ACCOUNT
 ######################################################################
+
+
 @app.route("/accounts/<int:account_id>", methods=["GET"])
 def read_account(account_id):
     """
@@ -86,7 +90,7 @@ def read_account(account_id):
 
     # use the Account.find() method to find the account
     found_account = Account.find(account_id)
-    
+
     # abort() with a status.HTTP_404_NOT_FOUND if it cannot be found
     if not found_account:
         abort(
@@ -100,6 +104,8 @@ def read_account(account_id):
 ######################################################################
 # UPDATE AN EXISTING ACCOUNT
 ######################################################################
+
+
 @app.route("/accounts/<int:account_id>", methods=["PUT"])
 def update_account(account_id):
     """
