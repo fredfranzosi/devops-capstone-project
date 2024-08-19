@@ -151,4 +151,21 @@ class TestAccountService(TestCase):
         response = self.client.get(f"{BASE_URL}/0")
         # assert that the resp.status_code is status.HTTP_404_NOT_FOUND
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
-        
+    
+    def test_list_all_accounts(self):
+        """It should List all Accounts in the database"""
+        # Use the _create_accounts() method to create five products, and then assign 
+        # the returned list to the test_products variable.
+        test_accounts = self._create_accounts(5)
+
+        # Make a GET request to the API endpoint to retrieve the acccounts
+        response = self.client.get(BASE_URL)
+
+        # assert that the resp.status_code is status.HTTP_200_OK
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        # assert that the len() of the data is 5 (the number of accounts you created) 
+        data = response.get_json()
+        self.assertEqual(len(data), 5)
+        for account in data:
+            self.assertIn(account, [acc.serialize() for acc in test_accounts])
