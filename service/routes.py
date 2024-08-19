@@ -141,7 +141,28 @@ def update_account(account_id):
 ######################################################################
 
 # ... place you code here to DELETE an account ...
+@app.route("/accounts/<int:account_id>", methods=["DELETE"])
+def delete_account(account_id):
+    """
+    Deletes an Account
+    This endpoint will delete an Account with the given account_id
+    """
+    app.logger.info("Request to DELETE an Account with ID %s.", account_id)
 
+    # Call the Account.find() method which will return an account with the given account_id.
+    found_account = Account.find(account_id)
+
+    # Abort with a return code HTTP_404_NOT_FOUND if the product was not found.
+    if not found_account:
+        abort(
+            status.HTTP_404_NOT_FOUND,
+            f"Account with ID = {account_id} not found",
+        )
+
+    found_account.delete()
+    app.logger.info("Account with  id [%s] deleted!", found_account.id)
+
+    return '', status.HTTP_204_NO_CONTENT
 
 ######################################################################
 #  U T I L I T Y   F U N C T I O N S
