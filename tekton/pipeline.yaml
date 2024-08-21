@@ -65,7 +65,7 @@ spec:
         - clone
     - name: build
       workspaces:
-        - name: buildah
+        - name: source
           workspace: pipeline-workspace
       taskRef:
         name: buildah
@@ -76,6 +76,6 @@ spec:
       runAfter:
         - tests
         - lint
-        
+
         
 
