@@ -130,14 +130,13 @@ class TestAccountService(TestCase):
     def test_get_account(self):
         """It should Read an existing Account"""
         account = self._create_accounts(1)[0]
-        
+
         # Get the account using its ID
         response = self.client.get(f"{BASE_URL}/{account.id}")
-        
+
         # Assert that the return code was HTTP_200_OK, to verify that the request was successful and the account was retrieved.
         # assert that the resp.status_code is status.HTTP_200_OK
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-
 
         # get the data from resp.get_json()
         api_account = response.get_json()
@@ -154,10 +153,10 @@ class TestAccountService(TestCase):
         response = self.client.get(f"{BASE_URL}/0")
         # assert that the resp.status_code is status.HTTP_404_NOT_FOUND
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
-    
+
     def test_list_all_accounts(self):
         """It should List all Accounts in the database"""
-        # Use the _create_accounts() method to create five products, and then assign 
+        # Use the _create_accounts() method to create five products, and then assign
         # the returned list to the test_products variable.
         test_accounts = self._create_accounts(5)
 
@@ -167,22 +166,22 @@ class TestAccountService(TestCase):
         # assert that the resp.status_code is status.HTTP_200_OK
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
-        # assert that the len() of the data is 5 (the number of accounts you created) 
+        # assert that the len() of the data is 5 (the number of accounts you created)
         data = response.get_json()
         self.assertEqual(len(data), 5)
         for account in data:
             self.assertIn(account, [acc.serialize() for acc in test_accounts])
-    
+
     def test_update_account(self):
         """It should Update an existing Account"""
-         # create an Account to update
+        # create an Account to update
         test_account = AccountFactory()
-        
+
         # send a self.client.post() request to the BASE_URL with a json payload of test_account.serialize()
         response = self.client.post(
             BASE_URL,
             json=test_account.serialize(),
-            content_type="application/json"            
+            content_type="application/json"
         )
         # assert that the resp.status_code is status.HTTP_201_CREATED
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
@@ -204,7 +203,7 @@ class TestAccountService(TestCase):
         data = response.get_json()
         # assert that the updated_account["name"] is whatever you changed it to
         self.assertEqual(data["name"], new_account["name"])
-    
+
     def test_update_account_not_found(self):
         """It should raise an error when updating a non-existing existing Account"""
         test_account = AccountFactory()
@@ -212,14 +211,14 @@ class TestAccountService(TestCase):
         response = self.client.put(
             f"{BASE_URL}/0",
             json=test_account.serialize(),
-            content_type="application/json"            
+            content_type="application/json"
         )
         # assert that the resp.status_code is status.HTTP_404_NOT_FOUND
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
 
     def test_delete_account(self):
         """It should Delete an existing Account"""
-         # create an Account to update        
+        # create an Account to update
         account = self._create_accounts(1)[0]
 
         # send a self.client.delete() request to the BASE_URL with an id of an account
@@ -232,14 +231,14 @@ class TestAccountService(TestCase):
 
         # Assert that the return code was HTTP_404_NOT_FOUND
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
-    
+
     def test_delete_account_not_found(self):
         """It should raise an error when deleting a non-existing existing Account"""
         # send a self.client.delete() request to the BASE_URL with an invalid account number (e.g., 0)
         response = self.client.delete(f"{BASE_URL}/0")
         # assert that the resp.status_code is status.HTTP_404_NOT_FOUND
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
-    
+
     def test_method_not_allowed(self):
         """It should not allow an illegal method call"""
         # call self.client.delete() on the BASE_URL
@@ -270,4 +269,3 @@ class TestAccountService(TestCase):
         response = self.client.get('/', environ_overrides=HTTPS_ENVIRON)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.headers.get('Access-Control-Allow-Origin'), '*')
-
